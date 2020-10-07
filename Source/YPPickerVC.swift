@@ -70,10 +70,9 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             cameraVC?.didCapturePhoto = { [weak self] img in
                 guard let self = self else { return }
                 self.tempCapturePhoto.append(img)
+                self.reloadCameraDoneEnabled()
                 if self.tempCapturePhoto.count >= YPConfig.maxNumberOfCapture {
-                    let didSelectItems = self.tempCapturePhoto.map { YPMediaItem.photo(p: YPMediaPhoto(image: $0, fromCamera: true)) }
-                    self.didSelectItems?(didSelectItems)
-                    self.tempCapturePhoto.removeAll()
+                    self.cameraDone()
                 }
             }
             cameraVC?.hasNextCapture = { [weak self]  in
@@ -294,7 +293,16 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         case .camera:
             navigationItem.titleView = nil
             title = cameraVC?.title
-            navigationItem.rightBarButtonItem = nil
+            if YPConfig.maxNumberOfCapture > 1 {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.done,
+                                                                    style: .done,
+                                                                    target: self,
+                                                                    action: #selector(cameraDone))
+                navigationItem.rightBarButtonItem?.isEnabled = false
+            } else {
+                navigationItem.rightBarButtonItem = nil
+            }
+            reloadCameraDoneEnabled()
         case .video:
             navigationItem.titleView = nil
             title = videoVC?.title
@@ -304,6 +312,10 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .disabled)
         navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)
+    }
+    
+    func reloadCameraDoneEnabled() {
+        navigationItem.rightBarButtonItem?.isEnabled = (YPConfig.maxNumberOfCapture > 1 && self.tempCapturePhoto.count > 0 &&  self.tempCapturePhoto.count < YPConfig.maxNumberOfCapture)
     }
     
     @objc
@@ -332,6 +344,13 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                 })
             }
         }
+        
+    }
+    @objc
+    func cameraDone() {
+        let didSelectItems = self.tempCapturePhoto.map { YPMediaItem.photo(p: YPMediaPhoto(image: $0, fromCamera: true)) }
+        self.didSelectItems?(didSelectItems)
+        self.tempCapturePhoto.removeAll()
     }
     
     func stopAll() {
