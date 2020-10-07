@@ -13,6 +13,7 @@ import Photos
 public class YPCameraVC: UIViewController, UIGestureRecognizerDelegate, YPPermissionCheckable {
     
     public var didCapturePhoto: ((UIImage) -> Void)?
+    public var hasNextCapture: (() -> Bool)?
     let photoCapture = newPhotoCapture()
     let v: YPCameraView!
     var isInited = false
@@ -55,6 +56,7 @@ public class YPCameraVC: UIViewController, UIGestureRecognizerDelegate, YPPermis
     }
     
     func start() {
+        v.shotButton.isEnabled = true
         doAfterPermissionCheck { [weak self] in
             guard let strongSelf = self else {
                 return
@@ -141,8 +143,6 @@ public class YPCameraVC: UIViewController, UIGestureRecognizerDelegate, YPPermis
                 return
             }
             
-            self.photoCapture.stopCamera()
-            
             var image = shotImage
             // Crop the image if the output needs to be square.
             if YPConfig.onlySquareImagesFromCamera {
@@ -157,6 +157,11 @@ public class YPCameraVC: UIViewController, UIGestureRecognizerDelegate, YPPermis
             DispatchQueue.main.async {
                 let noOrietationImage = image.resetOrientation()
                 self.didCapturePhoto?(noOrietationImage.resizedImageIfNeeded())
+                if self.hasNextCapture?() ?? false {
+                    self.v.shotButton.isEnabled = true
+                } else {
+                    self.photoCapture.stopCamera()
+                }
             }
         }
     }

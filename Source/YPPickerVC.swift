@@ -44,6 +44,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     
     var capturedImage: UIImage?
     
+    var tempCapturePhoto: [UIImage] = []
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -66,8 +68,17 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         if YPConfig.screens.contains(.photo) {
             cameraVC = YPCameraVC()
             cameraVC?.didCapturePhoto = { [weak self] img in
-                self?.didSelectItems?([YPMediaItem.photo(p: YPMediaPhoto(image: img,
-                                                                        fromCamera: true))])
+                guard let self = self else { return }
+                self.tempCapturePhoto.append(img)
+                if self.tempCapturePhoto.count >= YPConfig.maxNumberOfCapture {
+                    let didSelectItems = self.tempCapturePhoto.map { YPMediaItem.photo(p: YPMediaPhoto(image: $0, fromCamera: true)) }
+                    self.didSelectItems?(didSelectItems)
+                    self.tempCapturePhoto.removeAll()
+                }
+            }
+            cameraVC?.hasNextCapture = { [weak self]  in
+                guard let self = self else { return false }
+                return self.tempCapturePhoto.count < YPConfig.maxNumberOfCapture
             }
         }
         
