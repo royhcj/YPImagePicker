@@ -20,3 +20,4 @@
 "YPImagePickerVideoTooLong" = "Pilih durasi video kurang dari %@ detik";
 "YPImagePickerVideoTooShort" = " Durasi video setidaknya %@ detik";
 "YPImagePickerWarningItemsLimit" = "Hanya diperbolehkan %d foto atau video";
+"YPImagePickerCurrentNumberOfCapture" = "已選擇 %d 張相片";

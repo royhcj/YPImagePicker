@@ -20,3 +20,4 @@
 "YPImagePickerVideoTooLong" = "Video phải nhỏ hơn %@ giây";
 "YPImagePickerVideoTooShort" = "วิดีโอต้องมีความยาวอย่างน้อย %@ วินาที";
 "YPImagePickerWarningItemsLimit" = "Tổng số ảnh và video được chọn không được vượt quá %d";
+"YPImagePickerCurrentNumberOfCapture" = "已選擇 %d 張相片";

@@ -20,3 +20,4 @@
 "YPImagePickerVideoTooLong" = "Выберите видео короче %@ секунд";
 "YPImagePickerVideoTooShort" = "Видео должно быть длиннее %@ секунд";
 "YPImagePickerWarningItemsLimit" = "Максимум %d фото или видео";
+"YPImagePickerCurrentNumberOfCapture" = "已選擇 %d 張相片";

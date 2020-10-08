@@ -20,3 +20,4 @@
 "YPImagePickerVideoTooLong" = "Изберете видео по-късо от %@ секунди";
 "YPImagePickerVideoTooShort" = "Видеото трябва да бъде поне %@ секунди";
 "YPImagePickerWarningItemsLimit" = "Лимитът е %d снимки или клипове";
+"YPImagePickerCurrentNumberOfCapture" = "已選擇 %d 張相片";

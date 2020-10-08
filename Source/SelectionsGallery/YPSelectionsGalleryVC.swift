@@ -12,7 +12,11 @@ public class YPSelectionsGalleryVC: UIViewController, YPSelectionsGalleryCellDel
     
     override public var prefersStatusBarHidden: Bool { return YPConfig.hidesStatusBar }
     
-    public var items: [YPMediaItem] = []
+    public var items: [YPMediaItem] = [] {
+        didSet{
+            reloadPhotoTitle()
+        }
+    }
     public var didFinishHandler: ((_ gallery: YPSelectionsGalleryVC, _ items: [YPMediaItem]) -> Void)?
     private var lastContentOffsetX: CGFloat = 0
     
@@ -33,7 +37,7 @@ public class YPSelectionsGalleryVC: UIViewController, YPSelectionsGalleryCellDel
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-
+        reloadPhotoTitle()
         // Register collection view cell
         v.collectionView.register(YPSelectionsGalleryCell.self, forCellWithReuseIdentifier: "item")
         v.collectionView.dataSource = self
@@ -51,6 +55,19 @@ public class YPSelectionsGalleryVC: UIViewController, YPSelectionsGalleryCellDel
         
         YPHelper.changeBackButtonIcon(self)
         YPHelper.changeBackButtonTitle(self)
+    }
+    
+    func reloadPhotoTitle() {
+        let photoCount = items.filter { item -> Bool in
+            if case .photo(_) = item {
+                return true
+            } else {
+                return false
+            }
+        }.count
+        if photoCount > 0 {
+            title = String(format: YPConfig.wordings.currentNumberOfCapture,items.count)
+        }
     }
 
     @objc
