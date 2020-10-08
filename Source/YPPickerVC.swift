@@ -293,15 +293,6 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         case .camera:
             navigationItem.titleView = nil
             title = cameraVC?.title
-            if YPConfig.maxNumberOfCapture > 1 {
-                navigationItem.rightBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.done,
-                                                                    style: .done,
-                                                                    target: self,
-                                                                    action: #selector(cameraDone))
-                navigationItem.rightBarButtonItem?.isEnabled = false
-            } else {
-                navigationItem.rightBarButtonItem = nil
-            }
             reloadCameraDoneEnabled()
         case .video:
             navigationItem.titleView = nil
@@ -315,7 +306,16 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     }
     
     func reloadCameraDoneEnabled() {
-        navigationItem.rightBarButtonItem?.isEnabled = (YPConfig.maxNumberOfCapture > 1 && self.tempCapturePhoto.count > 0 &&  self.tempCapturePhoto.count < YPConfig.maxNumberOfCapture)
+        if YPConfig.maxNumberOfCapture > 1, self.tempCapturePhoto.count > 0 {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.next,
+                                                                style: .done,
+                                                                target: self,
+                                                                action: #selector(cameraDone))
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+        
+        title = YPConfig.wordings.cameraTitle + (self.tempCapturePhoto.count > 0 ? "(\(tempCapturePhoto.count))" : "")
     }
     
     @objc
