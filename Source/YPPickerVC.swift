@@ -311,6 +311,7 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                                                                 style: .done,
                                                                 target: self,
                                                                 action: #selector(cameraDone))
+            navigationItem.rightBarButtonItem?.tintColor = YPConfig.colors.tintColor
         } else {
             navigationItem.rightBarButtonItem = nil
         }
