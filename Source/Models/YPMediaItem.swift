@@ -47,6 +47,15 @@ public class YPMediaVideo {
 public enum YPMediaItem {
     case photo(p: YPMediaPhoto)
     case video(v: YPMediaVideo)
+    
+    var isPhoto: Bool {
+        switch self {
+        case .photo:
+            return true
+        case .video:
+            return false
+        }
+    }
 }
 
 // MARK: - Compression

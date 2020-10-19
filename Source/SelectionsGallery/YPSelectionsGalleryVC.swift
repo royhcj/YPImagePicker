@@ -58,15 +58,11 @@ public class YPSelectionsGalleryVC: UIViewController, YPSelectionsGalleryCellDel
     }
     
     func reloadPhotoTitle() {
-        let photoCount = items.filter { item -> Bool in
-            if case .photo(_) = item {
-                return true
-            } else {
-                return false
-            }
-        }.count
+        let photoCount = items.filter { $0.isPhoto }.count
         if photoCount > 0 {
             title = String(format: YPConfig.wordings.currentNumberOfCapture,items.count)
+        } else {
+            title = nil
         }
     }
 
