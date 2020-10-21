@@ -18,7 +18,7 @@ class YPMultipleSelectionIndicator: UIView {
     convenience init() {
         self.init(frame: .zero)
         
-        let size: CGFloat = 20
+        let size: CGFloat = 24
         
         sv(
             circle,

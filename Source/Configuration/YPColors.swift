@@ -23,6 +23,9 @@ public struct YPColors {
     
     public var filterSelectionSelectedColor: UIColor = .ypLabel
     public var filterSelectionUnSelectedColor: UIColor = .ypSecondaryLabel
+    public var maxNumberWarningBackgroundColor: UIColor = .ypSecondarySystemBackground
+    public var maxNumberWarningTextColor: UIColor?
+    
     
     public var navigationTintColor: UIColor = .ypLabel
     
