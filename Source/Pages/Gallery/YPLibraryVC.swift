@@ -196,7 +196,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         v.assetViewContainer.setMultipleSelectionMode(on: multipleSelectionEnabled)
         v.collectionView.reloadData()
         checkLimit()
-        delegate?.libraryViewDidToggleMultipleSelection(enabled: multipleSelectionEnabled)
+//        delegate?.libraryViewDidToggleMultipleSelection(enabled: multipleSelectionEnabled)
     }
     
     // MARK: - Tap Preview
