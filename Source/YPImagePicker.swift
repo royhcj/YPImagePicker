@@ -68,6 +68,7 @@ override open func viewDidLoad() {
         viewControllers = [picker]
         setupLoadingView()
         navigationBar.isTranslucent = false
+    navigationBar.barTintColor = YPConfig.colors.navigationBarTintColor
 
         picker.didSelectItems = { [weak self] items in
             // Use Fade transition instead of default push animation
