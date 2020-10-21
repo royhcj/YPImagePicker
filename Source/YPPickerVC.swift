@@ -227,7 +227,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         label.font = YPConfig.fonts.pickerTitleFont
 
         // Use custom textColor if set by user.
-        label.textColor = YPConfig.colors.tintColor
+
+        label.textColor = YPConfig.colors.navigationTintColor
 
         
         if YPConfig.library.options != nil {
@@ -240,7 +241,7 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             let arrow = UIImageView()
             arrow.image = YPConfig.icons.arrowDownIcon
             arrow.image = arrow.image?.withRenderingMode(.alwaysTemplate)
-            arrow.tintColor = YPConfig.colors.tintColor
+            arrow.tintColor = YPConfig.colors.navigationTintColor
             
             let attributes = UINavigationBar.appearance().titleTextAttributes
             if let attributes = attributes, let foregroundColor = attributes[.foregroundColor] as? UIColor {
@@ -299,6 +300,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             navigationItem.rightBarButtonItem = nil
         }
 
+        let textAttributes = [NSAttributedString.Key.foregroundColor:YPConfig.colors.navigationTintColor]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .disabled)
         navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)

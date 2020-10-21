@@ -11,8 +11,8 @@ import Foundation
 
 extension UINavigationBar {
 
-    func setTitleFont(font: UIFont?) {
+    func setTitleAttributes(font: UIFont?, color: UIColor) {
         guard let font = font  else { return }
-        self.titleTextAttributes = [NSAttributedString.Key.font: font]
+        self.titleTextAttributes = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor:color]
     }
 }
