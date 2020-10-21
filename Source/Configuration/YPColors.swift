@@ -21,6 +21,8 @@ public struct YPColors {
     
     public var navigationBarTintColor: UIColor?
     
+    public var navigationTintColor: UIColor = .ypLabel
+    
     /// A color for circle for selected items in multiple selection
     /// Default is nil, which takes tintColor.
     public var multipleItemsSelectedCircleColor: UIColor?
