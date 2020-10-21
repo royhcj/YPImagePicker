@@ -13,6 +13,7 @@ final class YPMenuItem: UIView {
     
     var textLabel = UILabel()
     var button = UIButton()
+    var indicatorView = UIView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -33,11 +34,12 @@ final class YPMenuItem: UIView {
         
         sv(
             textLabel,
-            button
+            button,
+            indicatorView
         )
         
         textLabel.centerInContainer()
-        |-(10)-textLabel-(10)-|
+        
         button.fillContainer()
         
         textLabel.style { l in
@@ -47,13 +49,25 @@ final class YPMenuItem: UIView {
             l.adjustsFontSizeToFitWidth = true
             l.numberOfLines = 2
         }
+        indicatorView.style { bottomView in
+            bottomView.backgroundColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemIndicatorColor
+            bottomView.layer.cornerRadius = 1.5
+        }
+        
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint(item: indicatorView, attribute: .centerX, relatedBy: .equal, toItem: textLabel, attribute: .centerX, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: indicatorView, attribute: .top, relatedBy: .equal, toItem: textLabel, attribute: .bottom, multiplier: 1.0, constant: 1).isActive = true
+        NSLayoutConstraint(item: indicatorView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 3).isActive = true
+        NSLayoutConstraint(item: indicatorView, attribute: .width, relatedBy: .equal, toItem: textLabel, attribute: .width, multiplier: 1.0, constant: 0).isActive = true
     }
 
     func select() {
         textLabel.textColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemSelectedTextColor
+        indicatorView.isHidden = false
     }
     
     func deselect() {
         textLabel.textColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemUnselectedTextColor
+        indicatorView.isHidden = true
     }
 }
