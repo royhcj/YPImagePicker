@@ -8,7 +8,7 @@
 
 import UIKit
 import Stevia
-
+import AudioToolbox
 class YPCameraView: UIView, UIGestureRecognizerDelegate {
     
     let focusView = UIView(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
@@ -19,6 +19,12 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
     let flashButton = UIButton()
     let timeElapsedLabel = UILabel()
     let progressBar = UIProgressView()
+    let flashView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
+        view.alpha = 0
+        view.backgroundColor = .black
+        return view
+    }()
 
     convenience init(overlayView: UIView? = nil) {
         self.init(frame: .zero)
@@ -27,6 +33,7 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
             // View Hierarchy
             sv(
                 previewViewContainer,
+                flashView,
                 overlayView,
                 progressBar,
                 timeElapsedLabel,
@@ -40,6 +47,7 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
             // View Hierarchy
             sv(
                 previewViewContainer,
+                flashView,
                 progressBar,
                 timeElapsedLabel,
                 flashButton,
@@ -80,6 +88,7 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
             buttonsContainer.height(100)
             buttonsContainer.Bottom == previewViewContainer.Bottom - 50
         }
+        flashView.followEdges(previewViewContainer)
 
         overlayView?.followEdges(previewViewContainer)
 
@@ -111,5 +120,21 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
         flashButton.setImage(YPConfig.icons.flashOffIcon, for: .normal)
         flipButton.setImage(YPConfig.icons.loopIcon, for: .normal)
         shotButton.setImage(YPConfig.icons.capturePhotoImage, for: .normal)
+    }
+}
+
+extension YPCameraView {
+    func takeCaptureAnimate() {
+        let shutterView = UIView(frame: previewViewContainer.frame)
+        shutterView.backgroundColor = UIColor.black
+        addSubview(shutterView)
+        UIView.animate(withDuration: 0.3, animations: {
+            shutterView.alpha = 0
+        }, completion: { (_) in
+            shutterView.removeFromSuperview()
+        })
+        
+        // Play the camera shutter system sound
+        AudioServicesPlaySystemSound(1108)
     }
 }

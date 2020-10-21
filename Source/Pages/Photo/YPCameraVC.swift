@@ -136,7 +136,11 @@ public class YPCameraVC: UIViewController, UIGestureRecognizerDelegate, YPPermis
         // Prevent from tapping multiple times in a row
         // causing a crash
         v.shotButton.isEnabled = false
-        
+        v.takeCaptureAnimate()
+        if #available(iOS 10.0, *) {
+            let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .light)
+            impactFeedbackgenerator.impactOccurred()
+        }
         photoCapture.shoot { imageData in
             
             guard let shotImage = UIImage(data: imageData) else {
