@@ -317,6 +317,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         } else {
             navigationItem.rightBarButtonItem = nil
         }
+        navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
+        navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .disabled)
         
         title = YPConfig.wordings.cameraTitle + (self.tempCapturePhoto.count > 0 ? "(\(tempCapturePhoto.count))" : "")
     }

@@ -113,6 +113,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                                                             action: #selector(save))
         navigationItem.rightBarButtonItem?.tintColor = YPConfig.colors.tintColor
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
+        navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .disabled)
     }
     
     // MARK: - Top buttons
