@@ -78,6 +78,9 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         
         // Setup of Navigation Bar
         title = YPConfig.wordings.filter
+        navigationController?.navigationBar.barTintColor = YPConfig.colors.navigationBarTintColor
+        navigationController?.navigationBar.tintColor = YPConfig.colors.navigationTintColor
+        navigationController?.navigationBar.setTitleAttributes(font: YPConfig.fonts.navigationBarTitleFont, color: YPConfig.colors.navigationTintColor)
         if isFromSelectionVC {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.cancel,
                                                                style: .plain,
@@ -102,7 +105,7 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     // MARK: Setup - ⚙️
     
     fileprivate func setupRightBarButton() {
-        let rightBarButtonTitle = isFromSelectionVC ? YPConfig.wordings.done : YPConfig.wordings.next
+        let rightBarButtonTitle = YPConfig.wordings.done
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarButtonTitle,
                                                             style: .done,
                                                             target: self,
