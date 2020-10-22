@@ -55,10 +55,10 @@ final class YPMenuItem: UIView {
         }
         
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint(item: indicatorView, attribute: .centerX, relatedBy: .equal, toItem: textLabel, attribute: .centerX, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: indicatorView, attribute: .top, relatedBy: .equal, toItem: textLabel, attribute: .bottom, multiplier: 1.0, constant: 1).isActive = true
         NSLayoutConstraint(item: indicatorView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 3).isActive = true
-        NSLayoutConstraint(item: indicatorView, attribute: .width, relatedBy: .equal, toItem: textLabel, attribute: .width, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: indicatorView, attribute: .leading, relatedBy: .equal, toItem: textLabel, attribute: .leading, multiplier: 1.0, constant: 4).isActive = true
+        NSLayoutConstraint(item: indicatorView, attribute: .trailing, relatedBy: .equal, toItem: textLabel, attribute: .trailing, multiplier: 1.0, constant: -4).isActive = true
     }
 
     func select() {
