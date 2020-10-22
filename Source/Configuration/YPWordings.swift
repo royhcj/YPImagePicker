@@ -42,4 +42,7 @@ public struct YPWordings {
     public var crop = ypLocalized("YPImagePickerCrop")
     public var warningMaxItemsLimit = ypLocalized("YPImagePickerWarningItemsLimit")
     public var currentNumberOfCapture = ypLocalized("YPImagePickerCurrentNumberOfCapture")
+    
+    public var libarySubitle: String?
+    public var cameraSubitle: String?
 }

@@ -65,16 +65,17 @@ class ExampleViewController: UIViewController {
     @objc
     func showPicker() {
         let isTakingPhotoForDish = false
-        
+        let maxNumber: Int = 5
         var config = YPImagePickerConfiguration()
         config.library.mediaType = .photo
         config.library.itemOverlayType = .none
         config.library.skipSelectionsGallery = false
         config.library.numberOfItemsInRow = 3
-        config.library.maxNumberOfItems = isTakingPhotoForDish ? 1 : 5
+        config.library.maxNumberOfItems = isTakingPhotoForDish ? 1 : maxNumber
         config.library.defaultMultipleSelection = config.library.maxNumberOfItems > 1
         config.library.multipleSelectionButtonHidden = true
-       
+        config.library.showWarningView = false
+        
         config.showsPhotoFilters = true
         config.shouldSaveNewPicturesToAlbum = true
         config.startOnScreen = .photo
@@ -82,10 +83,13 @@ class ExampleViewController: UIViewController {
         config.hidesStatusBar = false
         config.hidesBottomBar = false
         config.maxCameraZoomFactor = 2.0
-        config.maxNumberOfCapture = isTakingPhotoForDish ? 1 : 5
+        config.maxNumberOfCapture = isTakingPhotoForDish ? 1 : maxNumber
         config.albumName = "Nu²"
    
         config.gallery.hidesRemoveButton = false
+        
+        config.wordings.cameraSubitle = "最多可拍攝 \(maxNumber) 張"
+        config.wordings.libarySubitle = "最多可新增 \(maxNumber) 張"
        
         //unuse
         config.library.preselectedItems = selectedItems

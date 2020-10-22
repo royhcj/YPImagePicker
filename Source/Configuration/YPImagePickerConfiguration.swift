@@ -232,6 +232,8 @@ public struct YPConfigLibrary {
     
     public var libraryMultipleSelectionIndicator: YPConfigLibraryMultipleSelectionIndicator = .check
     
+    public var showWarningView: Bool = true
+    
 
 }
 

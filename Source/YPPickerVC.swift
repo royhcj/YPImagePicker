@@ -211,33 +211,37 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         
         vc.didSelectAlbum = { [weak self] album in
             self?.libraryVC?.setAlbum(album)
-            self?.setTitleViewWithTitle(aTitle: album.title)
+            self?.setLibraryTitleView(title: album.title,subtitle: YPConfig.wordings.libarySubitle)
             navVC.dismiss(animated: true, completion: nil)
         }
         present(navVC, animated: true, completion: nil)
     }
-    
-    func setTitleViewWithTitle(aTitle: String) {
-        let titleView = UIView()
-        titleView.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
+    func setLibraryTitleView(title: String,subtitle: String?) {
+//        let containerView = UIView()
+//        containerView.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
         
-        let label = UILabel()
-        label.text = aTitle
-        // Use YPConfig font
-        label.font = YPConfig.fonts.pickerTitleFont
-
-        // Use custom textColor if set by user.
-
-        label.textColor = YPConfig.colors.navigationTintColor
-
         
-        if YPConfig.library.options != nil {
-            titleView.sv(
-                label
-            )
-            |-(>=8)-label.centerHorizontally()-(>=8)-|
-            align(horizontally: label)
-        } else {
+        let stackView = UIStackView()
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.spacing = 3
+//        containerView.addSubview(stackView)
+//        stackView.fillContainer()
+        
+        let titleStackView = UIStackView()
+        titleStackView.alignment = .center
+        titleStackView.axis = .horizontal
+        titleStackView.spacing = 5
+        stackView.addArrangedSubview(titleStackView)
+        
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = YPConfig.fonts.pickerTitleFont
+        titleLabel.textColor = YPConfig.colors.navigationTintColor
+        titleStackView.addArrangedSubview(titleLabel)
+        
+        if YPConfig.library.options == nil {
             let arrow = UIImageView()
             arrow.image = YPConfig.icons.arrowDownIcon
             arrow.image = arrow.image?.withRenderingMode(.alwaysTemplate)
@@ -248,25 +252,48 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                 arrow.image = arrow.image?.withRenderingMode(.alwaysTemplate)
                 arrow.tintColor = foregroundColor
             }
+            titleStackView.addArrangedSubview(arrow)
             
-            let button = UIButton()
-            button.addTarget(self, action: #selector(navBarTapped), for: .touchUpInside)
-            button.setBackgroundColor(UIColor.white.withAlphaComponent(0.5), forState: .highlighted)
-            
-            titleView.sv(
-                label,
-                arrow,
-                button
-            )
-            button.fillContainer()
-            |-(>=8)-label.centerHorizontally()-arrow-(>=8)-|
-            align(horizontally: label-arrow)
+            stackView.isUserInteractionEnabled = true
+            let tapImageGesture = UITapGestureRecognizer(target: self, action: #selector(navBarTapped))
+            stackView.addGestureRecognizer(tapImageGesture)
+        }
+        if let subtitle = subtitle, YPConfig.maxNumberOfCapture > 0  {
+            let promptLabel = UILabel()
+            promptLabel.text = subtitle
+            promptLabel.font = YPConfig.fonts.pickerSubTitleFont
+            promptLabel.textColor = YPConfig.colors.navigationTintColor
+            stackView.addArrangedSubview(promptLabel)
         }
         
-        label.firstBaselineAnchor.constraint(equalTo: titleView.bottomAnchor, constant: -14).isActive = true
+        navigationItem.titleView = stackView
+    }
+    
+    func setCameraTitleView(title: String,subtitle: String?) {
+        guard let subtitle = subtitle, YPConfig.maxNumberOfCapture > 0 else {
+            navigationItem.titleView = nil
+            self.title = cameraVC?.title
+            return
+        }
+        let stackView = UIStackView()
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.spacing = 3
         
-        titleView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        navigationItem.titleView = titleView
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = YPConfig.fonts.pickerTitleFont
+        titleLabel.textColor = YPConfig.colors.navigationTintColor
+        stackView.addArrangedSubview(titleLabel)
+        
+        let promptLabel = UILabel()
+        promptLabel.text = subtitle
+        promptLabel.font = YPConfig.fonts.pickerSubTitleFont
+        promptLabel.textColor = YPConfig.colors.navigationTintColor
+        stackView.addArrangedSubview(promptLabel)
+        
+   
+        navigationItem.titleView = stackView
     }
     
     func updateUI() {
@@ -279,7 +306,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
 		}
         switch mode {
         case .library:
-            setTitleViewWithTitle(aTitle: libraryVC?.title ?? "")
+            navigationItem.titleView = nil
+            setLibraryTitleView(title: libraryVC?.title ?? "", subtitle: YPConfig.wordings.libarySubitle)
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.next,
                                                                 style: .done,
                                                                 target: self,
@@ -291,8 +319,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
 				libraryVC!.selection.count >= YPConfig.library.minNumberOfItems
 
         case .camera:
-            navigationItem.titleView = nil
-            title = cameraVC?.title
+            setCameraTitleView(title: cameraVC?.title ?? "", subtitle: YPConfig.wordings.cameraSubitle)
+           
             reloadCameraDoneEnabled()
         case .video:
             navigationItem.titleView = nil
@@ -320,7 +348,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
         navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .disabled)
         
-        title = YPConfig.wordings.cameraTitle + (self.tempCapturePhoto.count > 0 ? "(\(tempCapturePhoto.count))" : "")
+        let title = YPConfig.wordings.cameraTitle + (self.tempCapturePhoto.count > 0 ? "(\(tempCapturePhoto.count))" : "")
+        setCameraTitleView(title: title, subtitle: YPConfig.wordings.cameraSubitle)
     }
     
     @objc
