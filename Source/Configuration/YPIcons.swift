@@ -29,4 +29,5 @@ public struct YPIcons {
     public var removeImage: UIImage = imageFromBundle("yp_remove")
     public var libaryUnselectedImage: UIImage = imageFromBundle("yp_libary_unselected")
     public var libarySelectedImage: UIImage = imageFromBundle("yp_libary_selected")
+    public var filterImage: UIImage = imageFromBundle("yp_filter")
 }

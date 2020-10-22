@@ -17,8 +17,7 @@ public class YPSelectionsGalleryCell: UICollectionViewCell {
     
     weak var delegate: YPSelectionsGalleryCellDelegate?
     let imageView = UIImageView()
-    let editIcon = UIView()
-    let editSquare = UIView()
+    let editIcon = UIImageView()
     let removeButton = UIButton()
     
     override init(frame: CGRect) {
@@ -27,15 +26,11 @@ public class YPSelectionsGalleryCell: UICollectionViewCell {
         sv(
             imageView,
             editIcon,
-            editSquare,
             removeButton
         )
         
         imageView.fillContainer()
         editIcon.size(32).left(12).bottom(12)
-        editSquare.size(16)
-        editSquare.CenterY == editIcon.CenterY
-        editSquare.CenterX == editIcon.CenterX
         
         removeButton.top(12).trailing(12)
         
@@ -48,14 +43,12 @@ public class YPSelectionsGalleryCell: UICollectionViewCell {
             i.clipsToBounds = true
             i.contentMode = .scaleAspectFill
         }
+        editIcon.image = YPConfig.icons.filterImage
         editIcon.style { v in
             v.backgroundColor = UIColor.ypSystemBackground
             v.layer.cornerRadius = 16
         }
-        editSquare.style { v in
-            v.layer.borderWidth = 1
-            v.layer.borderColor = UIColor.ypLabel.cgColor
-        }
+
         removeButton.setImage(YPConfig.icons.removeImage, for: .normal)
         removeButton.addTarget(self, action: #selector(removeButtonTapped), for: .touchUpInside)
     }
@@ -67,7 +60,6 @@ public class YPSelectionsGalleryCell: UICollectionViewCell {
     
     func setEditable(_ editable: Bool) {
         self.editIcon.isHidden = !editable
-        self.editSquare.isHidden = !editable
     }
     
     required public init?(coder aDecoder: NSCoder) {
