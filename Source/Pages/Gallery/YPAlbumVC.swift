@@ -19,14 +19,20 @@ class YPAlbumVC: UIViewController {
     var didSelectAlbum: ((YPAlbum) -> Void)?
     var albums = [YPAlbum]()
     let albumsManager: YPAlbumsManager
+    let librarySelectionCount: Int
     
     let v = YPAlbumView()
     override func loadView() { view = v }
     
-    required init(albumsManager: YPAlbumsManager) {
+    required init(albumsManager: YPAlbumsManager, librarySelectionCount: Int) {
+        self.librarySelectionCount = librarySelectionCount
         self.albumsManager = albumsManager
         super.init(nibName: nil, bundle: nil)
-        title = YPConfig.wordings.albumsTitle
+        if librarySelectionCount > 0 {
+            title = String(format: YPConfig.wordings.currentNumberOfCapture,librarySelectionCount)
+        } else {
+            title = YPConfig.wordings.albumsTitle
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
