@@ -181,6 +181,11 @@ public struct YPImagePickerConfiguration {
 /// Encapsulates library specific settings.
 public struct YPConfigLibrary {
     
+    public enum YPConfigLibraryMultipleSelectionIndicator {
+        case number
+        case check
+    }
+    
     public var options: PHFetchOptions?
 
     /// Set this to true if you want to force the library output to be a squared image. Defaults to false.
@@ -224,6 +229,9 @@ public struct YPConfigLibrary {
     public var itemOverlayType: YPItemOverlayType = .grid
     
     public var multipleSelectionButtonHidden: Bool = false
+    
+    public var libraryMultipleSelectionIndicator: YPConfigLibraryMultipleSelectionIndicator = .check
+    
 
 }
 

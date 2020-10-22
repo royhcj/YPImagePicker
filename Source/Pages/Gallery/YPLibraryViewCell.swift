@@ -13,6 +13,8 @@ class YPMultipleSelectionIndicator: UIView {
     
     let circle = UIView()
     let label = UILabel()
+    let selectionImageView = UIImageView()
+    let unselectionImageView = UIImageView()
     var selectionColor = UIColor.ypSystemBlue
 
     convenience init() {
@@ -22,22 +24,48 @@ class YPMultipleSelectionIndicator: UIView {
         
         sv(
             circle,
-            label
+            label,
+            selectionImageView,
+            unselectionImageView
         )
-        
         circle.fillContainer()
         circle.size(size)
         label.fillContainer()
+        selectionImageView.fillContainer()
+        unselectionImageView.fillContainer()
         
         circle.layer.cornerRadius = size / 2.0
         label.textAlignment = .center
         label.textColor = .white
         label.font = YPConfig.fonts.multipleSelectionIndicatorFont
+
         
+        switch YPConfig.library.libraryMultipleSelectionIndicator {
+        case .check:
+            selectionImageView.image = YPConfig.icons.libarySelectedImage
+            unselectionImageView.image = YPConfig.library.maxNumberOfItems > 1 ? YPConfig.icons.libaryUnselectedImage : nil
+            label.isHidden = true
+            circle.isHidden = true
+        case .number:
+            selectionImageView.isHidden = true
+            unselectionImageView.isHidden = true
+            label.isHidden = false
+            circle.isHidden = false
+        }
         set(number: nil)
     }
-    
+
     func set(number: Int?) {
+        guard YPConfig.library.maxNumberOfItems > 1 else { return }
+        switch YPConfig.library.libraryMultipleSelectionIndicator {
+        case .check:
+            setCheck(check: number != nil)
+        case .number:
+            setNumber(number: number)
+        }
+
+    }
+    private func setNumber(number: Int?) {
         label.isHidden = (number == nil)
         if let number = number {
             circle.backgroundColor = selectionColor
@@ -50,6 +78,10 @@ class YPMultipleSelectionIndicator: UIView {
             circle.layer.borderWidth = 1
             label.text = ""
         }
+    }
+    func setCheck(check: Bool) {
+        unselectionImageView.isHidden = check
+        selectionImageView.isHidden = !check
     }
 }
 
@@ -105,5 +137,7 @@ class YPLibraryViewCell: UICollectionViewCell {
     private func refreshSelection() {
         let showOverlay = isSelected || isHighlighted
         selectionOverlay.alpha = showOverlay ? 0.6 : 0
+        guard YPConfig.library.maxNumberOfItems == 1 else { return }
+        multipleSelectionIndicator.setCheck(check: isSelected)
     }
 }
