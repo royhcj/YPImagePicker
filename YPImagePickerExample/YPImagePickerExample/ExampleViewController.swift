@@ -70,7 +70,7 @@ class ExampleViewController: UIViewController {
         /* Uncomment and play around with the configuration 👨‍🔬 🚀 */
 
         /* Set this to true if you want to force the  library output to be a squared image. Defaults to false */
-//         config.library.onlySquare = true
+        // config.library.onlySquare = true
 
         /* Set this to true if you want to force the camera output to be a squared image. Defaults to true */
         // config.onlySquareImagesFromCamera = false
@@ -80,26 +80,32 @@ class ExampleViewController: UIViewController {
         // config.targetImageSize = .cappedTo(size: 1024)
 
         /* Choose what media types are available in the library. Defaults to `.photo` */
-        config.library.mediaType = .photoAndVideo
+        config.library.maxNumberOfItems = 1
+        config.library.mediaType = .photo
+//        config.library.onlySquare = true
+        config.library.isSquareByDefault = false
 		config.library.itemOverlayType = .grid
         /* Enables selecting the front camera by default, useful for avatars. Defaults to false */
         // config.usesFrontCamera = true
 
         /* Adds a Filter step in the photo taking process. Defaults to true */
-        // config.showsFilters = false
+         config.showsPhotoFilters = false
 
         /* Manage filters by yourself */
-//        config.filters = [YPFilter(name: "Mono", coreImageFilterName: "CIPhotoEffectMono"),
-//                          YPFilter(name: "Normal", coreImageFilterName: "")]
-//        config.filters.remove(at: 1)
-//        config.filters.insert(YPFilter(name: "Blur", coreImageFilterName: "CIBoxBlur"), at: 1)
+        // config.filters = [YPFilter(name: "Mono", coreImageFilterName: "CIPhotoEffectMono"),
+        //                   YPFilter(name: "Normal", coreImageFilterName: "")]
+        // config.filters.remove(at: 1)
+        // config.filters.insert(YPFilter(name: "Blur", coreImageFilterName: "CIBoxBlur"), at: 1)
 
         /* Enables you to opt out from saving new (or old but filtered) images to the
            user's photo library. Defaults to true. */
         config.shouldSaveNewPicturesToAlbum = false
 
         /* Choose the videoCompression. Defaults to AVAssetExportPresetHighestQuality */
-        config.video.compression = AVAssetExportPresetMediumQuality
+        config.video.compression = AVAssetExportPresetPassthrough
+
+        /* Choose the recordingSizeLimit. If not setted, then limit is by time. */
+        // config.video.recordingSizeLimit = 10000000
 
         /* Defines the name of the album when saving pictures in the user's photo library.
            In general that would be your App name. Defaults to "DefaultYPImagePickerAlbumName" */
@@ -111,10 +117,10 @@ class ExampleViewController: UIViewController {
 
         /* Defines which screens are shown at launch, and their order.
            Default value is `[.library, .photo]` */
-        config.screens = [.library, .photo, .video]
+        config.screens = [.library, .photo]
 
         /* Can forbid the items with very big height with this property */
-//        config.library.minWidthForItem = UIScreen.main.bounds.width * 0.8
+        // config.library.minWidthForItem = UIScreen.main.bounds.width * 0.8
 
         /* Defines the time limit for recording videos.
            Default is 30 seconds. */
@@ -125,7 +131,7 @@ class ExampleViewController: UIViewController {
         config.video.libraryTimeLimit = 500.0
 
         /* Adds a Crop step in the photo taking process, after filters. Defaults to .none */
-        config.showsCrop = .rectangle(ratio: (16/9))
+        config.showsCrop = .rectangle(ratio: (300/170))
 
         /* Defines the overlay view for the camera. Defaults to UIView(). */
         // let overlayView = UIView()
@@ -144,12 +150,12 @@ class ExampleViewController: UIViewController {
 
         config.maxCameraZoomFactor = 2.0
 
-        config.library.maxNumberOfItems = 5
+        config.library.maxNumberOfItems = 1
         config.gallery.hidesRemoveButton = false
 
         /* Disable scroll to change between mode */
         // config.isScrollToChangeModesEnabled = false
-//        config.library.minNumberOfItems = 2
+        // config.library.minNumberOfItems = 2
 
         /* Skip selection gallery after multiple selections */
         // config.library.skipSelectionsGallery = true
