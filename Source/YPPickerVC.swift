@@ -46,6 +46,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     
     var tempCapturePhoto: [UIImage] = []
     
+    private var emptyAlert: UIAlertController?
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -165,6 +167,12 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     }
     
     func pagerDidSelectController(_ vc: UIViewController) {
+        if let vc = vc as? YPLibraryVC,
+           vc.initialized,
+           !vc.hasAvailablePhotos() {
+            showEmptyAlert(true)
+        }
+        
         updateMode(with: vc)
     }
     
@@ -434,8 +442,27 @@ extension YPPickerVC: YPLibraryViewDelegate {
     }
     
     public func noPhotosForOptions() {
-        self.dismiss(animated: true) {
-            self.imagePickerDelegate?.noPhotos()
+        showEmptyAlert(true)
+    }
+    
+    public func libraryDidChange(isEmpty: Bool) {
+        showEmptyAlert(isEmpty)
+    }
+    
+    private func showEmptyAlert(_ showing: Bool) {
+        if showing,
+           emptyAlert == nil {
+            let alert = UIAlertController(title: "無法開啟圖庫", message: "您的圖庫未發現照片，請確認後再啟用。", preferredStyle: .alert)
+            alert.addAction(.init(title: "關閉", style: .cancel, handler: { _ in
+                self.imagePickerDelegate?.noPhotos()
+                self.showPage(1)
+                self.emptyAlert = nil
+            }))
+            present(alert, animated: true)
+            emptyAlert = alert
+        } else {
+            emptyAlert?.dismiss(animated: true, completion: nil)
+            emptyAlert = nil
         }
     }
     

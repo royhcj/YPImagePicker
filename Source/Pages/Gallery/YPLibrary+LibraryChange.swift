@@ -20,6 +20,7 @@ extension YPLibraryVC: PHPhotoLibraryChangeObserver {
             let collectionChanges = changeInstance.changeDetails(for: fetchResult)
             if collectionChanges != nil {
                 self.mediaManager.fetchResult = collectionChanges!.fetchResultAfterChanges
+                self.delegate?.libraryDidChange(isEmpty: !self.mediaManager.hasResultItems)
                 let collectionView = self.v.collectionView!
                 if !collectionChanges!.hasIncrementalChanges || collectionChanges!.hasMoves {
                     collectionView.reloadData()

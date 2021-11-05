@@ -589,6 +589,10 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         }
     }
     
+    public func hasAvailablePhotos() -> Bool {
+        return mediaManager.hasResultItems
+    }
+    
     // MARK: - TargetSize
     
     private func targetSize(for asset: PHAsset, cropRect: CGRect) -> CGSize {
