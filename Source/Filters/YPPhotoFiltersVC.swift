@@ -35,6 +35,8 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     fileprivate var filteredThumbnailImagesArray: [UIImage] = []
     fileprivate var thumbnailImageForFiltering: CIImage? // Small image for creating filters thumbnails
     fileprivate var currentlySelectedImageThumbnail: UIImage? // Used for comparing with original image when tapped
+    fileprivate var currentRotation: CGFloat = 0
+    fileprivate var rotatedOriginalImage: UIImage = UIImage()
 
     fileprivate var v = YPFiltersView()
 
@@ -47,27 +49,19 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     override open func viewDidLoad() {
         super.viewDidLoad()
         
+        // Re-select original filter
+        if let filterName = inputPhoto.appliedFilterName,
+           let index = self.filters.firstIndex(where: { $0.name == filterName }) {
+            selectedFilter = filters[index]
+        }
+        
+        // Restore Rotation
+        currentRotation = inputPhoto.appliedRotation ?? 0
+        
         // Setup of main image an thumbnail images
         v.imageView.image = inputPhoto.image
-        thumbnailImageForFiltering = thumbFromImage(inputPhoto.image)
-        DispatchQueue.global().async {
-            self.filteredThumbnailImagesArray = self.filters.map { filter -> UIImage in
-                if let applier = filter.applier,
-                    let thumbnailImage = self.thumbnailImageForFiltering,
-                    let outputImage = applier(thumbnailImage) {
-                    return outputImage.toUIImage()
-                } else {
-                    return self.inputPhoto.originalImage
-                }
-            }
-            DispatchQueue.main.async {
-                self.v.collectionView.reloadData()
-                self.v.collectionView.selectItem(at: IndexPath(row: 0, section: 0),
-                                            animated: false,
-                                            scrollPosition: UICollectionView.ScrollPosition.bottom)
-                self.v.filtersLoader.stopAnimating()
-            }
-        }
+        rotatedOriginalImage = inputPhoto.rotatedOriginalImage
+        setThumnailImageForFiltering(rotatedOriginalImage)
         
         // Setup of Collection View
         v.collectionView.register(YPFilterCollectionViewCell.self, forCellWithReuseIdentifier: "FilterCell")
@@ -100,6 +94,43 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         touchDownGR.delegate = self
         v.imageView.addGestureRecognizer(touchDownGR)
         v.imageView.isUserInteractionEnabled = true
+        
+        v.rotateButton?.addTarget(self, action: #selector(onRotationButtonClicked(sender:)), for: .touchUpInside)
+    }
+    
+    private func setThumnailImageForFiltering(_ image: UIImage) {
+        thumbnailImageForFiltering = thumbFromImage(image)
+        DispatchQueue.global().async {
+            self.filteredThumbnailImagesArray = self.filters.map { filter -> UIImage in
+                if let applier = filter.applier,
+                    let thumbnailImage = self.thumbnailImageForFiltering,
+                    let outputImage = applier(thumbnailImage) {
+                    return outputImage.toUIImage()
+                } else {
+                    return image
+                }
+            }
+            DispatchQueue.main.async {
+                let selected: IndexPath = {
+                    if let filterName = self.selectedFilter?.name,
+                       let index = self.filters.firstIndex(where: { $0.name == filterName }) {
+                        return IndexPath(row: index, section: 0)
+                    } else {
+                        return self.v.collectionView.indexPathsForSelectedItems?.first
+                            ?? IndexPath(row: 0, section: 0)
+                    }
+                }()
+                self.v.collectionView.reloadData()
+                self.v.collectionView.selectItem(at: selected,
+                                            animated: false,
+                                            scrollPosition: UICollectionView.ScrollPosition.bottom)
+                self.v.filtersLoader.stopAnimating()
+                
+                if self.currentlySelectedImageThumbnail == nil {
+                    self.currentlySelectedImageThumbnail = self.filteredThumbnailImagesArray[selected.row]
+                }
+            }
+        }
     }
     
     // MARK: Setup - ⚙️
@@ -121,11 +152,23 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     fileprivate func handleTouchDown(sender: UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
-            v.imageView.image = inputPhoto.originalImage
+            v.imageView.image = rotatedOriginalImage
         case .ended:
-            v.imageView.image = currentlySelectedImageThumbnail ?? inputPhoto.originalImage
+            v.imageView.image = currentlySelectedImageThumbnail ?? inputPhoto.rotatedOriginalImage
         default: ()
         }
+    }
+    
+    @objc
+    fileprivate func onRotationButtonClicked(sender: Any) {
+        currentRotation += -CGFloat.pi / 2
+//        var image = inputPhoto.originalImage.rotated(by: currentRotation)
+        var image = rotatedOriginalImage.rotated(by: -CGFloat.pi / 2)
+        rotatedOriginalImage = image
+        setThumnailImageForFiltering(image)
+        
+        currentlySelectedImageThumbnail = currentlySelectedImageThumbnail?.rotated(by: -CGFloat.pi / 2)
+        v.imageView.image = currentlySelectedImageThumbnail ?? image
     }
     
     fileprivate func thumbFromImage(_ img: UIImage) -> CIImage {
@@ -154,13 +197,16 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         self.navigationItem.rightBarButtonItem = YPLoaders.defaultLoader
 
         DispatchQueue.global().async {
+            let image = self.rotatedOriginalImage//self.inputPhoto.rotatedOriginalImage//.rotated(by: self.currentRotation)
             if let f = self.selectedFilter,
                 let applier = f.applier,
-                let ciImage = self.inputPhoto.originalImage.toCIImage(),
+                let ciImage = image.toCIImage(),
                 let modifiedFullSizeImage = applier(ciImage) {
                 self.inputPhoto.modifiedImage = modifiedFullSizeImage.toUIImage()
+                self.inputPhoto.appliedFilterName = f.name
+                self.inputPhoto.appliedRotation = self.currentRotation == 0 ? nil : self.currentRotation
             } else {
-                self.inputPhoto.modifiedImage = nil
+                //self.inputPhoto.modifiedImage = nil
             }
             DispatchQueue.main.async {
                 didSave(YPMediaItem.photo(p: self.inputPhoto))

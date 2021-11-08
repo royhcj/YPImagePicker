@@ -14,6 +14,7 @@ class YPFiltersView: UIView {
     var collectionView: UICollectionView!
     var filtersLoader: UIActivityIndicatorView!
     fileprivate let collectionViewContainer: UIView = UIView()
+    var rotateButton: UIButton?
     
     convenience init() {
         self.init(frame: CGRect.zero)
@@ -42,6 +43,19 @@ class YPFiltersView: UIView {
         filtersLoader.centerInContainer()
         
         imageView.heightEqualsWidth()
+        
+        rotateButton = {
+            let button = UIButton()
+            button.setImage(YPConfig.icons.rotateImage, for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(button)
+            
+            button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            button.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -20).isActive = true
+            button.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -15).isActive = true
+            return button
+        }()
         
         backgroundColor = .offWhiteOrBlack
         imageView.contentMode = .scaleAspectFit

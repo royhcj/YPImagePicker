@@ -16,9 +16,19 @@ public class YPMediaPhoto {
     public var image: UIImage { return modifiedImage ?? originalImage }
     public let originalImage: UIImage
     public var modifiedImage: UIImage?
+    public var appliedFilterName: String?
+    public var appliedRotation: CGFloat?
     public let fromCamera: Bool
     public let exifMeta: [String: Any]?
     public var asset: PHAsset?
+    
+    public var rotatedOriginalImage: UIImage {
+        if let rotation = appliedRotation {
+            return originalImage.rotated(by: rotation)
+        } else {
+            return originalImage
+        }
+    }
     
     public init(image: UIImage, exifMeta: [String: Any]? = nil, fromCamera: Bool = false, asset: PHAsset? = nil) {
         self.originalImage = image
