@@ -108,6 +108,8 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
 
             strongSelf.updateCropInfo()
         }
+        
+        v.collectionView.backgroundColor = YPConfig.colors.libraryScreenBackgroundColor
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -225,7 +227,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         }
     }
     
-    func checkPermission() {
+    func checkPermission(onNoPermission: (() ->Void)? = nil) {
         checkPermissionToAccessPhotoLibrary { [weak self] hasPermission in
             guard let strongSelf = self else {
                 return
@@ -233,6 +235,8 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             if hasPermission && !strongSelf.initialized {
                 strongSelf.initialize()
                 strongSelf.initialized = true
+            } else if !hasPermission {
+                onNoPermission?()
             }
         }
     }
