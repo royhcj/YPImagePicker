@@ -197,13 +197,17 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         self.navigationItem.rightBarButtonItem = YPLoaders.defaultLoader
 
         DispatchQueue.global().async {
-            let image = self.rotatedOriginalImage//self.inputPhoto.rotatedOriginalImage//.rotated(by: self.currentRotation)
+            let image = self.rotatedOriginalImage
+            
             if let f = self.selectedFilter,
                 let applier = f.applier,
                 let ciImage = image.toCIImage(),
                 let modifiedFullSizeImage = applier(ciImage) {
                 self.inputPhoto.modifiedImage = modifiedFullSizeImage.toUIImage()
                 self.inputPhoto.appliedFilterName = f.name
+                self.inputPhoto.appliedRotation = self.currentRotation == 0 ? nil : self.currentRotation
+            } else if self.inputPhoto.appliedRotation != self.currentRotation {
+                self.inputPhoto.modifiedImage = image
                 self.inputPhoto.appliedRotation = self.currentRotation == 0 ? nil : self.currentRotation
             } else {
                 //self.inputPhoto.modifiedImage = nil
