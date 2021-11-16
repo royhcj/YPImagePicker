@@ -11,6 +11,7 @@ import Photos
 
 public class YPLibraryVC: UIViewController, YPPermissionCheckable {
     
+    internal var didChangeSelectionCount: ((Int) -> Void)?
     internal weak var delegate: YPLibraryViewDelegate?
     internal var v: YPLibraryView!
     internal var isProcessing = false // true if video or image is in processing state
@@ -43,6 +44,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         currentlySelectedIndex = 0
         if !multipleSelectionEnabled {
             selection.removeAll()
+            didChangeSelectionCount?(selection.count)
         }
         refreshMediaRequest()
     }
@@ -162,6 +164,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             if let self = self {
                 if !self.multipleSelectionEnabled {
                     self.selection.removeAll()
+                    self.didChangeSelectionCount?(self.selection.count)
                 }
                 self.showMultipleSelection()
             }

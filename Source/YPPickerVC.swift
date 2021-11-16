@@ -45,7 +45,8 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     var capturedImage: UIImage?
     
     var tempCapturePhoto: [UIImage] = []
-    
+    var tempLibrarySelectionCount: Int = 0
+    private var titleLibraryCountLabel: UILabel?
     private var emptyAlert: UIAlertController?
     
     open override func viewDidLoad() {
@@ -64,6 +65,11 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         if YPConfig.screens.contains(.library) {
             libraryVC = YPLibraryVC()
             libraryVC?.delegate = self
+            libraryVC?.didChangeSelectionCount = { [weak self] count in
+                guard let self = self else { return }
+                self.tempLibrarySelectionCount = count
+                self.titleLibraryCountLabel?.text = count == 0 ? "" : "(\(count))"
+            }
         }
         
         // Camera
@@ -250,6 +256,16 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         titleLabel.font = YPConfig.fonts.pickerTitleFont
         titleLabel.textColor = YPConfig.colors.navigationTintColor
         titleStackView.addArrangedSubview(titleLabel)
+        
+        titleLibraryCountLabel = {
+            let count = tempLibrarySelectionCount
+            let label = UILabel()
+            label.text = count == 0 ? "" : "(\(count))"
+            label.font = YPConfig.fonts.pickerTitleFont
+            label.textColor = YPConfig.colors.navigationTintColor
+            titleStackView.addArrangedSubview(label)
+            return label
+        }()
         
         if YPConfig.library.options == nil {
             let arrow = UIImageView()

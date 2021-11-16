@@ -80,6 +80,8 @@ extension YPLibraryVC {
             }
 			
             checkLimit()
+            
+            didChangeSelectionCount?(selection.count)
         }
     }
     
@@ -97,6 +99,8 @@ extension YPLibraryVC {
             )
         )
         checkLimit()
+        
+        didChangeSelectionCount?(selection.count)
     }
     
     func isInSelectionPool(indexPath: IndexPath) -> Bool {
