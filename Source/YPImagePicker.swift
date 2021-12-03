@@ -41,6 +41,8 @@ open class YPImagePicker: UINavigationController {
     let loadingView = YPLoadingView()
     private let picker: YPPickerVC!
     
+    private var hasShownGuideMessage: Bool = false
+    
     /// Get a YPImagePicker instance with the default configuration.
     public convenience init() {
         self.init(configuration: YPImagePickerConfiguration.shared)
@@ -60,7 +62,7 @@ open class YPImagePicker: UINavigationController {
         fatalError("init(coder:) has not been implemented")
     }
     
-override open func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         picker.didClose = { [weak self] in
             self?._didFinishPicking?([], true)
@@ -146,6 +148,18 @@ override open func viewDidLoad() {
                     self?.didSelect(items: [YPMediaItem.video(v: video)])
                 }
             }
+        }
+    }
+    
+    override open func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if let guideMessage = YPConfig.guideMessage,
+           !hasShownGuideMessage {
+            YPGuideView.show(over: view,
+                             title: guideMessage.title,
+                             subtitle: guideMessage.subtitle)
+            hasShownGuideMessage = true
         }
     }
     

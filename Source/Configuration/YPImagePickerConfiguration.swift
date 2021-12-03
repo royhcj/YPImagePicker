@@ -114,6 +114,9 @@ public struct YPImagePickerConfiguration {
     
     public var maxNumberOfCapture: Int = 5
     
+    /// Defines hint message at bottom. Hint message will be displayed if not nil.
+    public var guideMessage: GuideMessage?
+    
     /// List of default filters which will be added on the filter screen
     public var filters: [YPFilter] = [
         YPFilter(name: "Normal", applier: nil),
@@ -134,6 +137,17 @@ public struct YPImagePickerConfiguration {
         YPFilter(name: "Linear", coreImageFilterName: "CISRGBToneCurveToLinear"),
         YPFilter(name: "Sepia", coreImageFilterName: "CISepiaTone")
         ]
+    
+    /// GuideMessage
+    public struct GuideMessage {
+        var title: String
+        var subtitle: String
+        
+        public init(title: String, subtitle: String) {
+            self.title = title
+            self.subtitle = subtitle
+        }
+    }
     
     /// Migration
     
