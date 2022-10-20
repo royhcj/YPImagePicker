@@ -225,6 +225,14 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         let navVC = UINavigationController(rootViewController: vc)
         navVC.navigationBar.tintColor = .ypLabel
         
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(red: 0.0/255.0, green: 125/255.0, blue: 0.0/255.0, alpha: 1.0)
+            navVC.navigationBar.standardAppearance = appearance
+            navVC.navigationBar.scrollEdgeAppearance = appearance
+        }
+        
         vc.didSelectAlbum = { [weak self] album in
             self?.libraryVC?.setAlbum(album)
             self?.setLibraryTitleView(title: album.title,subtitle: YPConfig.wordings.libarySubitle)
